@@ -3,79 +3,49 @@
     <form
       action=""
       class="card col-sm-6 col-md-6 col-sm-12 px-4 mt-5 mx-auto shadow"
-      @submit.prevent="signUP"
+      @submit.prevent="go"
     >
-      <h4 class="text-center mt-3">Sign-up form</h4>
+      <h4 class="text-center mt-3">Sign-up form Validate</h4>
       <div>
-        <label for="" class="my-2">Firstname</label>
+        <label for="" class="my-2">Name</label>
         <input
           type="text"
-          placeholder="firstname"
+          placeholder="Name"
           class="form-control"
-          v-model="firstname"
-          name=""
+          v-model="v$.name.$model"
+          name="name"
           id=""
         />
-        <label for="" class="my-2">Lastname</label>
+        <div v-for="error in v$.name.$errors" :key="error">
+          <small class="text-danger">{{ error.$message }}</small>
+        </div>
+
+        <label for="" class="my-2">Email</label>
+        <input
+          type=""
+          placeholder="Email"
+          class="form-control"
+          v-model="v$.email.$model"
+          name="Email"
+          id=""
+        />
+        <div v-for="error in v$.email.$errors" :key="error">
+          <small class="text-sm text-danger">{{ error.$message }}</small>
+        </div>
+
+        <label for="" class="my-2">Password</label>
         <input
           type="text"
-          placeholder="lastname"
+          placeholder="Password"
           class="form-control"
-          v-model="lastname"
-          name="lastname"
+          v-model="v$.password.$model"
+          name="Password"
           id=""
         />
-        <label for="" class="mx-1 my-2">Gender: </label>
-
-        <label for="">Male</label>
-        <input
-          type="radio"
-          placeholder="Male"
-          class="mt-3 mx-1"
-          v-model="gender"
-          name=""
-          value="Male"
-          id=""
-        />
-        <label for="">female</label>
-        <input
-          type="radio"
-          placeholder="password"
-          class="mt-3 mx-1"
-          v-model="gender"
-          value="Female"
-          id=""
-        />
-
-        <div>
-          <label for="">Skills: </label><br />
-          <input
-            type="checkbox"
-            class="mx-1"
-            value="React js"
-            v-model="skill"
-          />
-          <label for="">React js</label><br />
-          <input type="checkbox" class="mx-1" value="Vue" v-model="skill" />
-          <label for="">Vue</label><br />
-          <input type="checkbox" class="mx-1" value="Laravel" v-model="skill" />
-          <label for="">Laravel</label><br />
+        <div v-for="error in v$.password.$errors" :key="error">
+          <small class="text-sm text-danger">{{ error.$message }}</small>
         </div>
-        <div>
-          <label for="" class="mt-4">Occupation</label><br />
-          <select
-            name=""
-            value="seel"
-            id=""
-            v-model="occupation"
-            class="form-control"
-          >
-            <option value="student">Student</option>
-            <option value="trader">Trader</option>
-            <option value="civil servant">Civil Servant</option>
-            <option value="unemployed">Unemployed</option>
-          </select>
-        </div>
+
         <div>
           <button class="btn btn-primary w-100 mt-3 mb-3">Sign up</button>
         </div>
@@ -91,52 +61,27 @@ import { computed, onMounted, ref } from "vue";
 import { useVuelidate } from "@vuelidate/core";
 import { required, minLength, maxLength, email } from "@vuelidate/validators";
 
-const firstname = ref("");
-const lastname = ref("");
-const gender = ref([]);
-const skill = ref([]);
-const occupation = ref("");
-const users = ref([]);
-const form = ref({
-  firstname: "",
-  lastname: "",
-  sex: "",
-  skill: "",
-  work: "",
-});
+// const form = ref({
+//   name: "",
+//   email: "",
+//   password: "",
+// });
+
+const name = ref("");
+const userEmail = ref("");
+const password = ref("");
 
 const rules = computed(() => ({
-  form: {
-    firstname: { required, min: minLength(5), max: maxLength(10) },
-    lastname: { required, min: minLength(5), max: maxLength(10) },
-    sex: { required },
-    skill: { required },
-    work: { required },
-  },
+  name: { required, min: minLength(5), max: maxLength(10) },
+  email: { required },
+  password: { required, min: minLength(5), max: maxLength(10) },
 }));
 
-const signUP = () => {
-  const userObject = {
-    name: firstname.value,
-    last: lastname.value,
-    sex: gender.value,
-    skill: skill.value,
-    work: occupation.value,
-  };
-  users.value.push(userObject);
-  // console.log(users.value);
+const v$ = useVuelidate(rules, { name, userEmail, password });
 
-  localStorage.setItem("user", JSON.stringify(users.value));
+const go = () => {
+  console.log(v$);
 };
-
-onMounted(() => {
-  // const getLocal
-  users.value = localStorage["user"]
-    ? JSON.parse(localStorage.getItem("user"))
-    : [];
-  // console.log(getLocal);
-  // users.value = getLocal;
-});
 // }
 </script>
 <style></style>
